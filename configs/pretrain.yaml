@@ -1,0 +1,58 @@
+task:
+  _target_: model.AlignmentTask
+
+  dataset:
+    dataloader:
+      batch_size: 16
+      num_workers: 4
+
+    train_ds:
+      _target_: dataset.AlignmentDataset
+      dataset_filepath: webcrawl-dataset/trainset.json
+      vocab_filepath: vocab.txt
+      augment: true
+
+    val_ds:
+      _target_: dataset.AlignmentDataset
+      dataset_filepath: webcrawl-dataset/valset.json
+      vocab_filepath: vocab.txt
+      augment: false
+
+  model:
+    alignment_model:
+      _target_: model.AlignmentModel
+      num_mels: 80
+      vocab_size: 105
+      note_size: 48
+      d_model: 256
+      num_layers: 2
+
+    optimizer:
+      lr: 1.0
+      betas: [0.9, 0.999]
+      weight_decay: 1e-2
+      eps: 1e-9
+
+    scheduler:
+      d_model: ${..alignment_model.d_model}
+      warmup_steps: 10000
+      min_lr: 1e-6
+
+pretrained_model: null
+
+callbacks:
+  lr:
+    _target_: pytorch_lightning.callbacks.LearningRateMonitor
+
+  cb:
+    _target_: pytorch_lightning.callbacks.ModelCheckpoint
+    monitor: val_loss
+    save_top_k: 10
+    save_last: True
+    filename: "{epoch}-{val_loss:.5f}"
+
+trainer:
+  max_epochs: 100
+  devices: 2
+  accelerator: gpu
+  strategy: ddp_find_unused_parameters_false
