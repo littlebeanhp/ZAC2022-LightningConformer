@@ -4,7 +4,7 @@ Team Lightning's solution for Zalo AI Challenge 2022
 # Dataset
 Link: 
 ```
-https://institute.vinbigdata.org/events/vinbigdata-chia-se-100-gio-du-lieu-tieng-noi-cho-cong-dong/
+https://drive.google.com/file/d/1vUSxdORDxk-ePUt-bUVDahpoXiqKchMx/
 ```
 Note that users should create a metadata  file in `.json` format with `audio_filepath`, `transcript` and `note` metadata fields.
 
